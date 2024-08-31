@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    {{ view.title }}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-8">
+    <h2 class="text-2xl font-bold mb-4">{{ view.title }}</h2>
+    <form method="post" class="bg-white shadow-md rounded-lg p-6">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+            Save
+        </button>
+    </form>
+</div>
+{% endblock %}
