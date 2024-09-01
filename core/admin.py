@@ -10,4 +10,4 @@ class PatientAdmin(admin.ModelAdmin):
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('patient', 'doctor', 'scheduled_at', 'created_at', 'updated_at')
     search_fields = ('patient__name', 'doctor__username')
-    list_filter = ('scheduled_at',)
+    list_filter = ['scheduled_at']
