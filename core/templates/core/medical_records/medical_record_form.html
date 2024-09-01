@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}Update{% else %}Create{% endif %} Medical Record</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Update{% else %}Create{% endif %} Medical Record</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if form.instance.pk %}Save Changes{% else %}Save Record{% endif %}</button>
+    </form>
+
+    <a href="{% url 'medical_record_list' patient_id=patient.id %}">Back to Records</a>
+</body>
+</html>

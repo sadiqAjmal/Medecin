@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor List</title>
+</head>
+<body>
+    <h1>List of Doctors</h1>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'doctor-list' %}" style="display: inline;">
+        <input type="text" name="search" placeholder="Search by name" value="{{ request.GET.search }}">
+        <button type="submit" name="action" value="search">Search</button>
+    </form>
+
+    <!-- Filter Form -->
+    <form method="get" action="{% url 'doctor-list' %}" style="display: inline;">
+        <select name="specialization">
+            <option value="">All Specializations</option>
+            {% for spec in specializations %}
+                <option value="{{ spec }}" {% if request.GET.specialization == spec %}selected{% endif %}>{{ spec }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="action" value="filter">Filter</button>
+    </form>
+
+    <!-- Display Doctors -->
+    <ul>
+        {% if doctors %}
+            {% for doctor in doctors %}
+                <li>{{ doctor.name }} - {{ doctor.specialization }}</li>
+            {% endfor %}
+        {% else %}
+            <li>No doctors found.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>

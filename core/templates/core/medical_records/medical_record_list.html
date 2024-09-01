@@ -1,0 +1,57 @@
+<!-- templates/medical_record_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records for {{ patient.name }}</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            text-align: left;
+        }
+        a {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Medical Records for {{ patient.name }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Diagnosis</th>
+                <th>Treatment</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in medical_records %}
+                <tr>
+                    <td>{{ record.diagnosis }}</td>
+                    <td>{{ record.treatment }}</td>
+                    <td>{{ record.date }}</td>
+                    <td>
+                        <a href="{% url 'medical_record_detail' patient_id=patient.id pk=record.id %}">View</a>
+                        <a href="{% url 'medical_record_update' patient_id=patient.id pk=record.id %}">Edit</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No medical records found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'medical_record_create' patient_id=patient.id %}">Add New Record</a>
+</body>
+</html>

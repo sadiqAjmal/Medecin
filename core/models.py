@@ -31,3 +31,35 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"Appointment with {self.doctor} for {self.patient} on {self.scheduled_at}"
+
+
+class Doctor(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=15)
+    specialization = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
+    
+    def __str__(self):
+        return f"Doctor name is {self.name} with specialization of {self.specialization}"
+
+
+class MedicalRecord(models.Model):
+    patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
+    doctor = models.ForeignKey('Doctor', on_delete=models.SET_NULL, null=True)
+    diagnosis = models.TextField()
+    treatment = models.TextField()
+    date_of_record = models.DateField()
+    visit_reason = models.CharField(max_length=255, blank=True)
+    prescription = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Medical Record of {self.patient} on {self.date_of_record}"
+
+    def short_description(self):
+        return f"{self.diagnosis[:50]}..."  
