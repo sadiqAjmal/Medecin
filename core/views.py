@@ -79,7 +79,7 @@ def patient_detail(request, pk):
 @login_required
 def appointment_list(request):
     appointments = Appointment.objects.filter(doctor=request.user)
-    return render(request, 'appointment_list.html', {'appointments': appointments})
+    return render(request, 'core/appointments/appointment_list.html', {'appointments': appointments})
 
 # @login_required
 # def appointment_create(request):
