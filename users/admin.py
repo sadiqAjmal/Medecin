@@ -1,24 +1,26 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User
+# from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseUserAdmin):
+    # add_form = CustomUserCreationForm
+    # form = CustomUserChangeForm
+    model = User
+
     add_fieldsets = (
         (None, {
-            'fields': ('username',
-            'email','phone_number', 'password1', 'password2', 'is_doctor', 'is_patient')
+            'fields': ('username', 'email', 'phone_number', 'password1', 'password2', 'is_doctor', 'is_patient'),
         }),
     )
 
     fieldsets = (
         (None, {
-            'fields': ('username',
-            'email','phone_number', 'password', 'is_doctor', 'is_patient')
+            'fields': ('username', 'email', 'phone_number', 'password', 'is_doctor', 'is_patient'),
         }),
     )
 
-                       
     list_display = ('username', 'email', 'is_staff', 'is_doctor', 'is_patient')
 
     def get_queryset(self, request):
