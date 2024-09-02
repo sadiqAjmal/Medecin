@@ -1,14 +1,29 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import CustomUser
+from .models import User
 
 # # This should be done in a migration or a signal, not in the admin class
 # # Ensure that this group is created only if it doesn't already exist
 # if not Group.objects.filter(name='Doctor').exists():
 #     Group.objects.create(name='Doctor')
 
-@admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    add_fieldsets = (
+        (None, {
+            'fields': ('username',
+            'email', 'password1', 'password2', 'is_doctor', 'is_patient')
+        }),
+    )
+    
+    fieldsets = (
+        (None, {
+            'fields': ('username',
+            'email', 'password', 'is_doctor', 'is_patient')
+        }),
+    )
+
+                       
     list_display = ('username', 'email', 'is_staff', 'is_doctor', 'is_patient')
 
     def get_queryset(self, request):
