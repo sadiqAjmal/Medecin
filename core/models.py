@@ -34,6 +34,7 @@ class Appointment(models.Model):
 
 
 class Doctor(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
@@ -41,7 +42,6 @@ class Doctor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
-    
     def __str__(self):
         return f"Doctor name is {self.name} with specialization of {self.specialization}"
 
@@ -49,17 +49,16 @@ class Doctor(models.Model):
 class MedicalRecord(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
     doctor = models.ForeignKey('Doctor', on_delete=models.SET_NULL, null=True)
+    appointment = models.ForeignKey('Appointment', on_delete=models.SET_NULL, null=True)
     diagnosis = models.TextField()
     treatment = models.TextField()
-    date_of_record = models.DateField()
-    visit_reason = models.CharField(max_length=255, blank=True)
-    prescription = models.TextField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
+    report = models.FileField(upload_to='medical_reports/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Medical Record of {self.patient} on {self.date_of_record}"
+        return f"Medical Record of {self.patient} on {self.created_at}"
 
     def short_description(self):
         return f"{self.diagnosis[:50]}..."  
