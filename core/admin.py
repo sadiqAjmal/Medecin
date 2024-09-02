@@ -3,7 +3,7 @@ from .models import Patient, Appointment, Doctor, MedicalRecord
 
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ( 'phone_number', 'date_of_birth', 'gender', 'created_at', 'updated_at')
+    list_display = ('date_of_birth', 'gender', 'created_at', 'updated_at')
     search_fields = ( 'email', 'phone_number')
 
 @admin.register(Appointment)
@@ -14,7 +14,7 @@ class AppointmentAdmin(admin.ModelAdmin):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'specialization', 'created_at', 'updated_at')
+    list_display = ('specialization', 'created_at', 'updated_at')
     search_fields = ('name',) 
     list_filter = ['specialization']  
 

@@ -10,7 +10,7 @@ class Patient(models.Model):
     
     # Correct reference to CustomUser model
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'is_patient': True})
-    phone_number = models.CharField(max_length=15)
+  
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -24,7 +24,6 @@ class Patient(models.Model):
 
 class Doctor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'is_doctor': True})
-    phone_number = models.CharField(max_length=15)
     specialization = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
