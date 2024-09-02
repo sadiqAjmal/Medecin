@@ -38,7 +38,11 @@ def doctor_appointment_management(request):
 # Patient Views
 @login_required
 def patient_list(request):
-    patients = Patient.objects.all()
+    if request.user.is_doctor:
+        print(request.user.doctor.id)
+        patients = Patient.objects.filter(appointment__doctor=request.user.doctor)
+    else:
+        patients = Patient.objects.all()
     return render(request, 'core/patients/patient_list.html', {'patients': patients})
 
 @login_required
