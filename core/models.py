@@ -17,11 +17,9 @@ class Patient(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        # Assuming the name is stored in the related CustomUser model
-        return self.user.username  # Or self.user.get_full_name() if you have that method in CustomUser
+        return self.user.username 
     
     def details(self):    
-        # Assuming the name is stored in the related CustomUser model
         return f'{self.user.username} ({self.get_gender_display()}), born on {self.date_of_birth.strftime("%b %d, %Y")}'
 
 class Doctor(models.Model):
