@@ -11,7 +11,7 @@
         {% for patient in patients %}
             <li class="bg-white shadow-md rounded-lg p-4">
                 <a href="{% url 'patient_detail' patient.pk %}" class="text-blue-600 hover:underline">
-                    {{ patient.name }}
+                   Patient: {{ patient.user.username }}
                 </a>
             </li>
         {% endfor %}

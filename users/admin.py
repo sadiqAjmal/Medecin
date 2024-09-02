@@ -5,8 +5,6 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    # add_form = CustomUserCreationForm
-    # form = CustomUserChangeForm
     model = User
 
     add_fieldsets = (
