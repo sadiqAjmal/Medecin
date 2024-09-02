@@ -1,9 +1,15 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from .models import CustomUser
+
+# # This should be done in a migration or a signal, not in the admin class
+# # Ensure that this group is created only if it doesn't already exist
+# if not Group.objects.filter(name='Doctor').exists():
+#     Group.objects.create(name='Doctor')
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'is_staff', 'is_doctor')
+    list_display = ('username', 'email', 'is_staff', 'is_doctor', 'is_patient')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

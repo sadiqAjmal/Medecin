@@ -4,6 +4,8 @@ from django.db import models
 class CustomUser(AbstractUser):
     is_doctor = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    is_patient = models.BooleanField(default=False)
+
 
     groups = models.ManyToManyField(
         Group,
@@ -20,6 +22,8 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.',
         verbose_name='user permissions',
     )
+
+
 
     def __str__(self):
         return self.username

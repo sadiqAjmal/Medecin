@@ -5,11 +5,11 @@ from users.models import CustomUser
 class Patient(models.Model):
     GENDER_CHOICES = [
         ('M', 'Male'),
-        ('F', 'Female')
+        ('F', 'Female'),
     ]
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    
+    # Correct reference to CustomUser model
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'is_patient': True})
     phone_number = models.CharField(max_length=15)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
@@ -17,14 +17,16 @@ class Patient(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        # Assuming the name is stored in the related CustomUser model
+        return self.user.username  # Or self.user.get_full_name() if you have that method in CustomUser
     
     def details(self):    
-        return f'{self.name} ({self.get_gender_display()}), born on {self.date_of_birth.strftime("%b %d, %Y")}'
+        # Assuming the name is stored in the related CustomUser model
+        return f'{self.user.username} ({self.get_gender_display()}), born on {self.date_of_birth.strftime("%b %d, %Y")}'
 
 class Appointment(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_staff': True})
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, limit_choices_to={'is_patient': True})
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_doctor': True})
     scheduled_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -34,16 +36,14 @@ class Appointment(models.Model):
 
 
 class Doctor(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'is_doctor': True})
     phone_number = models.CharField(max_length=15)
     specialization = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Doctor name is {self.name} with specialization of {self.specialization}"
+        return f"Doctor name is {self.user.username} with specialization of {self.specialization}"
 
 
 class MedicalRecord(models.Model):
