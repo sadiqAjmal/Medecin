@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.models import LogEntry
 # from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Patient, Appointment, Doctor, MedicalRecord
 from django.http import JsonResponse
@@ -18,7 +19,21 @@ def is_doctor(user):
 @login_required
 @user_passes_test(is_admin)
 def admin_dashboard(request):
-    return render(request, 'core/admin/admin_dashboard.html')
+    patients = Patient.objects.all()
+    appointments = Appointment.objects.all()
+    doctors = Doctor.objects.all()
+
+    # Fetch recent activities from the LogEntry model
+    recent_activities = LogEntry.objects.select_related('user', 'content_type').order_by('-action_time')[:10]
+
+    context = {
+        'patients': patients,
+        'appointments': appointments,
+        'doctors': doctors,
+        'recent_activities': recent_activities
+    }
+
+    return render(request, 'core/admin/admin_dashboard.html', context)
 
 @login_required
 @user_passes_test(is_admin)
@@ -63,5 +78,16 @@ def appointment_list(request):
 
 @login_required
 def doctor_dashboard(request):
-    return render(request, 'core/doctors/doctor_dashboard.html')
+    patients = Patient.objects.filter(appointment__doctor=request.user.doctor)
+    appoitments = Appointment.objects.filter(doctor=request.user.doctor)
+    return render(request, 'core/doctors/doctor_dashboard.html', {'patients': patients, 'appointments': appoitments})
 
+@login_required
+def doctors_list(request):
+    doctors = Doctor.objects.all()
+    return render(request, 'core/doctors/doctors_list.html', {'doctors': doctors})
+
+@login_required
+def doctor_details(request, pk):
+    doctor = get_object_or_404(Doctor, pk=pk)
+    return render(request, 'core/doctors/doctor_details.html', {'doctor': doctor})

@@ -1,12 +1,38 @@
-{% load static %}
+{% extends "base_generic.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Doctors Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'core/css/style.css' %}">
-</head>
-<body>
-    <h1>Hello To Doctors World!</h1>
-</body>
-</html>
+{% block title %}
+    Doctor Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-8">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-6 shadow-md">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-center">Doctor Dashboard</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 mt-8">
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Dashboard Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Widget 1 -->
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-xl font-semibold text-gray-700">Total Patients</h3>
+                    <p class="mt-4 text-3xl font-bold text-blue-600">{{ patients|length }}</p>
+                </div>
+
+                <!-- Widget 2 -->
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-xl font-semibold text-gray-700">Total Appointments</h3>
+                    <p class="mt-4 text-3xl font-bold text-green-600">{{ appointments|length }}</p>
+                </div>
+            </div>
+        </section>
+
+        
+    </main>
+</div>
+{% endblock %}

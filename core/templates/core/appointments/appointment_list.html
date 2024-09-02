@@ -8,6 +8,11 @@
 <div class="max-w-4xl mx-auto mt-8">
     <h2 class="text-2xl font-bold mb-4">Appointments</h2>
     <ul class="space-y-4">
+        {% if not appointments %}
+            <li class="bg-white shadow-md rounded-lg p-4">
+                <p class="text-gray-600">No appointments found.</p>
+            </li>
+        {% endif %}
         {% for appointment in appointments %}
             <li class="bg-white shadow-md rounded-lg p-4">
                 <div>
