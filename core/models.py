@@ -24,17 +24,6 @@ class Patient(models.Model):
         # Assuming the name is stored in the related CustomUser model
         return f'{self.user.username} ({self.get_gender_display()}), born on {self.date_of_birth.strftime("%b %d, %Y")}'
 
-class Appointment(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, limit_choices_to={'is_patient': True})
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_doctor': True})
-    scheduled_at = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Appointment with {self.doctor} for {self.patient} on {self.scheduled_at}"
-
-
 class Doctor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'is_doctor': True})
     phone_number = models.CharField(max_length=15)
@@ -43,8 +32,10 @@ class Doctor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Doctor name is {self.user.username} with specialization of {self.specialization}"
+        return self.user.username
 
+    def details(self):    
+        return f"Doctor name is {self.user.first_name} with specialization of {self.specialization}"
 
 class MedicalRecord(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
@@ -62,3 +53,13 @@ class MedicalRecord(models.Model):
 
     def short_description(self):
         return f"{self.diagnosis[:50]}..."  
+
+class Appointment(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    scheduled_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Appointment with {self.doctor} for {self.patient} on {self.scheduled_at}"
