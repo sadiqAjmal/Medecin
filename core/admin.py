@@ -14,8 +14,8 @@ class AppointmentAdmin(admin.ModelAdmin):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ('specialization', 'created_at', 'updated_at')
-    search_fields = ('name',) 
+    list_display = ('user__username','specialization', 'created_at', 'updated_at')
+    search_fields = ['user__username']
     list_filter = ['specialization']  
 
 @admin.register(MedicalRecord)

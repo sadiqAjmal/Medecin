@@ -7,7 +7,9 @@ class User(AbstractUser):
 
     phone_number = models.CharField(max_length=15, blank=True, null=True)
 
-
+    def __str__(self):
+        return self.username
+    
     # groups = models.ManyToManyField(
     #     Group,
     #     related_name='customuser_set',  # Update related_name to avoid conflicts
@@ -24,7 +26,3 @@ class User(AbstractUser):
     #     verbose_name='user permissions',
     # )
 
-
-
-    def __str__(self):
-        return self.username

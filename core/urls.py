@@ -25,12 +25,15 @@ urlpatterns = [
     path('patients/<int:patient_id>/records/create/', views.MedicalRecordCreateView, name='medical_record_create'),
     path('patients/<int:patient_id>/records/<int:pk>/update/', views.MedicalRecordUpdateView, name='medical_record_update'),
 
+    # Admin URLs
+    path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+
+
 ]
 
 '''
 urlpatterns = [
-    # Admin URLs
-    path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+   
     path('admin/doctors/', views.admin_doctor_management, name='admin_doctor_management'),
     # Add more admin URLs
 
