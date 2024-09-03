@@ -1,9 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.models import LogEntry
-# from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Patient, Appointment, Doctor, MedicalRecord
 from django.http import JsonResponse
 
@@ -80,7 +78,8 @@ def appointment_list(request):
 def doctor_dashboard(request):
     patients = Patient.objects.filter(appointment__doctor=request.user.doctor)
     appoitments = Appointment.objects.filter(doctor=request.user.doctor)
-    return render(request, 'core/doctors/doctor_dashboard.html', {'patients': patients, 'appointments': appoitments})
+    doctor = Doctor.objects.get(user=request.user)
+    return render(request, 'core/doctors/doctor_dashboard.html', {'patients': patients, 'appointments': appoitments, 'doctor': doctor})
 
 @login_required
 def doctors_list(request):
@@ -91,3 +90,31 @@ def doctors_list(request):
 def doctor_details(request, pk):
     doctor = get_object_or_404(Doctor, pk=pk)
     return render(request, 'core/doctors/doctor_details.html', {'doctor': doctor})
+
+# Medical Record Views
+@login_required
+def medical_record_list(request):
+    if request.user.is_doctor:
+        medical_records = MedicalRecord.objects.filter(patient__appointment__doctor=request.user.doctor)
+        patients = Patient.objects.filter(appointment__doctor=request.user.doctor)
+        doctor = Doctor.objects.get(user=request.user)
+    else:
+        medical_records = MedicalRecord.objects.all()
+        patients = Patient.objects.all()
+        doctor = Doctor.objects.all()
+
+    contexts = {
+        'medical_records': medical_records,
+        'patients': patients,
+        'doctor': doctor
+    }    
+    return render(request, 'core/medical_records/medical_record_list.html', contexts)
+
+# details
+# @login_required
+def medical_record_detail(request, id):
+    # Fetch the medical record for the specific patient
+    medical_record = MedicalRecord.objects.get(pk=id)
+
+    # Render the details page with the medical record
+    return render(request, 'core/medical_records/medical_record_detail.html', {'medical_record': medical_record})

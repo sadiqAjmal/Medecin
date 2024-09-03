@@ -16,9 +16,12 @@
                 {% if user.is_authenticated %}
                 <div class="flex space-x-4">
                     <li><a href="{% url 'redirect' %}" class="hover:underline">Home</a></li>
+                    {% if user.is_superuser %}
                     <li><a href="{% url 'doctor_list' %}" class="hover:underline">Doctors</a></li>
+                    {% endif %}
                     <li><a href="{% url 'patient_list' %}" class="hover:underline">Patients</a></li>
                     <li><a href="{% url 'appointment_list' %}" class="hover:underline">Appointments</a></li>
+                    <li><a href="{% url 'medical_record_list' %}" class="hover:underline">Medical Records</a></li>
                 </div>
                 <li>
                     <form method="post" action="{% url 'logout' %}">

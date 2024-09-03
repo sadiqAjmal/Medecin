@@ -15,9 +15,10 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 mt-8">
+        <!-- Dashboard Overview -->
         <section class="mb-12">
             <h2 class="text-2xl font-semibold mb-6 text-center">Dashboard Overview</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Widget 1 -->
                 <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                     <h3 class="text-xl font-semibold text-gray-700">Total Patients</h3>
@@ -32,7 +33,17 @@
             </div>
         </section>
 
-        
+        <!-- Doctor Details-->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Doctor Details</h2>
+            <div class="bg-white shadow-md rounded-lg p-4">
+                <p><strong>Email:</strong> {{ doctor.user.email }}</p>
+                <p><strong>Phone:</strong> {{ doctor.user.phone_number }}</p>
+                <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                <p><strong>Created at:</strong> {{ doctor.created_at }}</p>
+                <p><strong>Last updated:</strong> {{ doctor.updated_at }}</p>
+            </div>
+        </section>
     </main>
 </div>
 {% endblock %}
