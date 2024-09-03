@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Confirm Deletion
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-8">
+    <h2 class="text-2xl font-bold mb-4">Confirm Deletion</h2>
+
+    <div class="bg-white shadow-md rounded-lg p-4">
+        <p>Are you sure you want to delete the following medical record?</p>
+        <p><strong>Patient:</strong> {{ medical_record.patient.user.username }}</p>
+        <p><strong>Doctor:</strong> {{ medical_record.doctor.user.username }}</p>
+        <p><strong>Scheduled At:</strong> {{ medical_record.appointment.scheduled_at }}</p>
+        <p><strong>Diagnosis:</strong> {{ medical_record.diagnosis }}</p>
+        <p><strong>Treatment:</strong> {{ medical_record.treatment }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">Delete</button>
+            <a href="{% url 'medical_record_list' %}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

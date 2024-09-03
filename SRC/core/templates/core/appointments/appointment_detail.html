@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Appointment Details
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-8">
+    <h2 class="text-2xl font-bold mb-4">Appointment Details</h2>
+
+    <div class="bg-white shadow-md rounded-lg p-4 relative">
+
+        <!-- Update Button Positioned at Top Right -->
+        {% if user.is_superuser %}
+        <a href="{% url 'update_appointment' appointment.id %}" class="absolute top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-yellow-600">
+            Update
+        </a>
+        {% endif %}
+        <p><strong>Patient:</strong> {{ appointment.patient.user.username }}</p>
+        <p><strong>Doctor:</strong> {{ appointment.doctor.user.username }}</p>
+        <p><strong>Scheduled At:</strong> {{ appointment.scheduled_at }}</p>
+        <p><strong>Created At:</strong> {{ appointment.created_at }}</p>
+        <p><strong>Updated At:</strong> {{ appointment.updated_at }}</p>
+    </div>
+
+    <div class="mt-8 flex space-x-4">
+        <a href="{% url 'appointment_list' %}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+            Back to List
+        </a>
+    </div>
+</div>
+{% endblock %}

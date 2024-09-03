@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Médecin{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <header class="bg-blue-600 text-white p-4">
+        <h1 class="text-xl text-center">Médecin Hospital Management</h1>
+        <nav>
+            <ul class="flex items-center justify-between w-full">
+
+                {% if user.is_authenticated %}
+                <div class="flex space-x-4">
+                    <li><a href="{% url 'redirect' %}" class="hover:underline">Home</a></li>
+                    {% if user.is_superuser %}
+                    <li><a href="{% url 'doctor_list' %}" class="hover:underline">Doctors</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'patient_list' %}" class="hover:underline">Patients</a></li>
+                    <li><a href="{% url 'appointment_list' %}" class="hover:underline">Appointments</a></li>
+                    <li><a href="{% url 'medical_record_list' %}" class="hover:underline">Medical Records</a></li>
+                </div>
+                <li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:underline bg-transparent border-none text-white">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="p-4 flex-grow">
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-200 text-center p-4 mt-8">
+        <p>&copy; 2024 Médecin Hospital Management System</p>
+    </footer>
+
+</body>
+</html>
