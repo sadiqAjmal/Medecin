@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+   
     # Admin URLs
     path('dashboard/admin', views.admin_dashboard, name='admin_dashboard'),
 
@@ -30,8 +31,5 @@ urlpatterns = [
     # Medical Record URLs
     path('medical-records/', views.medical_record_list, name='medical_record_list'),
     path('medical-records/<int:id>/', views.medical_record_detail, name='medical_record_detail'),
-
-   
-
 
 ]
