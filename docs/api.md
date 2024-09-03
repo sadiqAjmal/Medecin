@@ -3,6 +3,7 @@
 This document provides an overview of the REST API endpoints available in the Médecin Hospital Management System.
 
 ## Base URL
+
 ```bash
 http://127.0.0.1:8000/
 ```

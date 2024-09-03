@@ -20,8 +20,6 @@ urlpatterns = [
     path('appointments/update/<int:appointment_id>/', views.update_appointment, name='update_appointment'),
     path('appointments/delete/<int:appointment_id>/', views.delete_appointment, name='delete_appointment'),
      
-    
-
     # Doctor URLs
     path('dashboard/doctors/', views.doctor_dashboard, name='doctor_dashboard'),
     path('doctors/', views.doctors_list, name='doctor_list'),
@@ -36,6 +34,5 @@ urlpatterns = [
     path('medical-records/create/', views.create_medical_record, name='create_medical_record'),
     path('medical-records/update/<int:id>/', views.update_medical_record, name='update_medical_record'),
     path('medical-records/delete/<int:id>/', views.delete_medical_record, name='delete_medical_record'),
-
 
 ]

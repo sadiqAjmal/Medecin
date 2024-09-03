@@ -20,7 +20,6 @@
    cd Medecin
    ```
 
-
 ## Setup Instructions
 
 ```bash
@@ -30,18 +29,25 @@ source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 ```
 
 # Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
+
 # Apply database migrations
+
 ```bash
 python manage.py migrate
 ```
+
 # Run the development server
+
 ```bash
 python manage.py runserver
 ```
+
 # Access the app at
+
 ```bash
 http://127.0.0.1:8000/
 ```
