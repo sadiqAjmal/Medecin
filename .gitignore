@@ -123,3 +123,4 @@ MANIFEST
 # Ignore any custom, sensitive files
 # Add any other custom files you don’t want to commit
 
+**/medical_reports/*
