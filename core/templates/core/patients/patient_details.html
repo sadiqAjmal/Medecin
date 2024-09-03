@@ -7,9 +7,11 @@
 {% block content %}
 <div class="max-w-4xl mx-auto mt-8">
     <div class="bg-white shadow-md rounded-lg p-4 relative">
+        {% if user.is_superuser %}
         <a href="{% url 'update_patient' patient.pk %}" class="absolute top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
             Update
         </a>
+        {% endif %}
         <h2 class="text-2xl font-bold mb-4">{{ patient.user.username }}</h2>
         <p><strong>Email:</strong> {{ patient.user.email }}</p>
         <p><strong>Phone:</strong> {{ patient.user.phone_number }}</p>
