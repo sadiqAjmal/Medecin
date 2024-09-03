@@ -123,4 +123,8 @@ MANIFEST
 # Ignore any custom, sensitive files
 # Add any other custom files you don’t want to commit
 
+# Ignore all files in any medical_reports directory
 **/medical_reports/*
+
+# Ignore the SRC\medical_reports directory
+SRC/medical_reports/
