@@ -411,24 +411,29 @@ User = get_user_model()
 @login_required
 def create_doctor(request):
     if request.method == 'POST':
-
         username = request.POST.get('username')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
         specialization = request.POST.get('specialization')
-        password=request.POST.get('password')
+        password = request.POST.get('password')
 
-        user = User.objects.create(
+        # Create the user and hash the password
+        user = User(
             username=username,
-            email=email,
-            password=password,
             phone_number=phone_number,
-            is_doctor=True  
+            email=email,
         )
+        user.set_password(password)  # Hash the password
+        user.is_doctor = True  # Set the is_doctor attribute
+        user.save()
+
+        # Create the doctor profile
         doctor = Doctor.objects.create(
             user=user,
+            
             specialization=specialization
         )
+
         return redirect('doctor_list')
     return render(request, 'core/doctors/doctor_form.html')
 
