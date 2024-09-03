@@ -4,7 +4,7 @@ This document provides an overview of the REST API endpoints available in the MÃ
 
 ## Base URL
 ```bash
-http://127.0.0.1:8000/api/
+http://127.0.0.1:8000/
 ```
 
 ## Endpoints
