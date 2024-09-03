@@ -6,7 +6,14 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto mt-8">
-    <h2 class="text-2xl font-bold mb-4">Medical Record Details</h2>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Medical Record Details</h2>
+        {% if user.is_authenticated and user.is_superuser %}
+        <a href="{% url 'update_medical_record' medical_record.pk %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+            Edit
+        </a>
+        {% endif %}
+    </div>
     <div class="bg-white shadow-md rounded-lg p-4">
         <p><strong>Patient:</strong> {{ medical_record.patient.user.username }}</p>
         <p><strong>Doctor:</strong> {{ medical_record.doctor.user.username }}</p>
@@ -18,15 +25,6 @@
         {% endif %}
         <p><strong>Created At:</strong> {{ medical_record.created_at }}</p>
         <p><strong>Updated At:</strong> {{ medical_record.updated_at }}</p>
-        
-        {% if user.is_authenticated and user.is_superuser %}
-        <div class="mt-4">
-            <a href="{% url 'update_medical_record' medical_record.pk %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block">
-                Edit
-            </a>
-           
-        </div>
-        {% endif %}
     </div>
     <div class="mt-8">
         <a href="{% url 'medical_record_list' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
