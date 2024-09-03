@@ -459,7 +459,7 @@ def update_doctor(request, doctor_id):
         'doctor': doctor,
     }
     return render(request, 'core/doctors/update_doctor_form.html', context)
-    return render(request, 'core/doctors/doctor_form.html')
+    
 
 @login_required
 @user_passes_test(is_admin)

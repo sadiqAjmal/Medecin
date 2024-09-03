@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Médecin - Page Not Found{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen fade-in">
+
+    <header class="bg-blue-600 text-white p-4">
+        <h1 class="text-xl text-center">Médecin Hospital Management</h1>
+        <nav>
+            <ul class="flex items-center justify-between w-full">
+                {% if user.is_authenticated %}
+                <div class="flex space-x-4">
+                    <li><a href="{% url 'redirect' %}" class="hover:underline">Home</a></li>
+                    {% if user.is_superuser %}
+                    <li><a href="{% url 'doctor_list' %}" class="hover:underline">Doctors</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'patient_list' %}" class="hover:underline">Patients</a></li>
+                    <li><a href="{% url 'appointment_list' %}" class="hover:underline">Appointments</a></li>
+                    <li><a href="{% url 'medical_record_list' %}" class="hover:underline">Medical Records</a></li>
+                </div>
+                <li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:underline bg-transparent border-none text-white">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="p-4 flex-grow flex flex-col items-center justify-center">
+        <h2 class="text-6xl font-bold text-blue-600 bounce">404</h2>
+        <p class="text-2xl mt-4 text-gray-700">Oops! Page not found.</p>
+        <p class="mt-2 text-gray-600">The page you're looking for doesn't exist or has been moved.</p>
+        <a href="{% url 'redirect' %}" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300">Go Back Home</a>
+    </main>
+
+    <footer class="bg-gray-200 text-center p-4">
+        <p>&copy; 2024 Médecin Hospital Management System</p>
+    </footer>
+
+</body>
+
+</html>
