@@ -3,5 +3,4 @@ from .views import role_based_redirect
 
 urlpatterns = [
     path('', role_based_redirect, name='redirect'),
-    # Other user-related URLs
 ]
