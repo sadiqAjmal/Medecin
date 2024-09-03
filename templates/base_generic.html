@@ -9,14 +9,33 @@
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
     <header class="bg-blue-600 text-white p-4">
-        <h1 class="text-xl">Médecin Hospital Management</h1>
+        <h1 class="text-xl text-center">Médecin Hospital Management</h1>
         <nav>
-            <ul class="flex space-x-4">
-                <li><a href="{% url 'patient_list' %}" class="hover:underline">Patients</a></li>
-                {% comment %} 
-                <li><a href="{% url 'appointment_list' %}" class="hover:underline">Appointments</a></li>
-                <li><a href="{% url 'logout' %}" class="hover:underline">Logout</a></li> 
-                {% endcomment %}
+            <ul class="flex items-center justify-between w-full">
+
+                {% if user.is_authenticated %}
+                <div class="flex space-x-4">
+                    <li><a href="{% url 'redirect' %}" class="hover:underline">Home</a></li>
+                    {% if user.is_superuser %}
+                    <li><a href="{% url 'doctor_list' %}" class="hover:underline">Doctors</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'patient_list' %}" class="hover:underline">Patients</a></li>
+                    <li><a href="{% url 'appointment_list' %}" class="hover:underline">Appointments</a></li>
+                    <li><a href="{% url 'medical_record_list' %}" class="hover:underline">Medical Records</a></li>
+                </div>
+                <li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:underline bg-transparent border-none text-white">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'login' %}" class="hover:underline">Login</a>
+                </li>
+                {% endif %}
             </ul>
         </nav>
     </header>

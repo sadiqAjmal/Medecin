@@ -8,10 +8,16 @@
 <div class="max-w-4xl mx-auto mt-8">
     <h2 class="text-2xl font-bold mb-4">Patient List</h2>
     <ul class="space-y-4">
+        {% if not patients %}
+            <li class="bg-white shadow-md rounded-lg p-4">
+                <p class="text-gray-600">No patients found.</p>
+            </li>
+        {% endif %}
         {% for patient in patients %}
             <li class="bg-white shadow-md rounded-lg p-4">
+                Patient:
                 <a href="{% url 'patient_detail' patient.pk %}" class="text-blue-600 hover:underline">
-                    {{ patient.name }}
+                    {{ patient.user.username }}
                 </a>
             </li>
         {% endfor %}
