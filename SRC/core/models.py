@@ -35,7 +35,6 @@ Doctor model is used to store the details of the doctor
 - user: reference to the User model
 - specialization: specialization of the doctor
 '''
-
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, limit_choices_to={'is_doctor': True})
     specialization = models.CharField(max_length=50)
