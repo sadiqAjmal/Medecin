@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 '''
 url patterns for the core app, these urls are used to navigate through the application
@@ -38,4 +41,6 @@ urlpatterns = [
     path('medical-records/update/<int:id>/', views.update_medical_record, name='update_medical_record'),
     path('medical-records/delete/<int:id>/', views.delete_medical_record, name='delete_medical_record'),
 
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
