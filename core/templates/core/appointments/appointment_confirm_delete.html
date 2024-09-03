@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Confirm Delete Appointment
+{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-8">
+    <h2 class="text-xl font-bold mb-4">Delete Appointment</h2>
+    <p>Are you sure you want to delete the appointment with {{ appointment.doctor.user.username }} for {{ appointment.patient.user.username }} scheduled at {{ appointment.scheduled_at }}?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+            Confirm Delete
+        </button>
+        <a href="{% url 'appointment_list' %}" class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}

@@ -14,18 +14,28 @@
             </li>
         {% endif %}
         {% for patient in patients %}
-            <li class="bg-white shadow-md rounded-lg p-4">
-                Patient:
-                <a href="{% url 'patient_detail' patient.pk %}" class="text-blue-600 hover:underline">
-                    {{ patient.user.username }}
-                </a>
+            <li class="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
+                <div>
+                    Patient:
+                    <a href="{% url 'patient_detail' patient.pk %}" class="text-blue-600 hover:underline">
+                        {{ patient.user.username }}
+                    </a>
+                </div>
+                <div class="space-x-2">
+                    <a href="{% url 'patient_detail' patient.pk %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        View Details
+                    </a>
+                    <a href="{% url 'delete_patient' patient.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                        Delete
+                    </a>
+                </div>
             </li>
         {% endfor %}
     </ul>
-    {% comment %} <div class="mt-8">
-        <a href="{% url 'patient_create' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+    <div class="mt-8">
+        <a href="{% url 'create_patient' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
             Create New Patient
         </a>
-    </div> {% endcomment %}
+    </div>
 </div>
 {% endblock %}

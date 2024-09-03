@@ -1,52 +1,62 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-    Medical Records
+Medical Records
 {% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto mt-8">
     <h2 class="text-2xl font-bold mb-4">Medical Records</h2>
+
+
+
     <ul class="space-y-4">
         {% if medical_records %}
-            {% for record in medical_records %}
-            <li class="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+        {% for record in medical_records %}
+        <li class="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+            <div>
                 <div>
-                    <div>
-                        <strong>Appointment Number:</strong> {{ record.appointment.id }}
-                    </div>
-                    <div>
-                        <strong>Patient:</strong> {{ record.patient.user.username }}
-                    </div>
-                    <div>
-                        <strong>Doctor:</strong> {{ record.appointment.doctor.user.username }}
-                    </div>
+                    <strong>Appointment Number:</strong> {{ record.appointment.id }}
                 </div>
-                <div class="ml-auto">
-                    <a href="{% url 'medical_record_detail' record.id %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block text-center">
-                        View Details
-                    </a>
-                    
-                    {%if user.is_authenticated and user.is_superuser %}
-                    <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
-                        <a >Delete</a>
+                <div>
+                    <strong>Patient:</strong> {{ record.patient.user.username }}
+                </div>
+                <div>
+                    <strong>Doctor:</strong> {{ record.appointment.doctor.user.username }}
+                </div>
+            </div>
+            <div class="ml-auto flex space-x-2">
+                <!-- View Details Button -->
+                <a href="{% url 'medical_record_detail' record.id %}"
+                    class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                    View Details
+                </a>
+
+                <!-- Delete Button -->
+                {% if user.is_authenticated and user.is_superuser %}
+                <form action="{% url 'delete_medical_record' record.id %}" method="post"
+                    onsubmit="return confirm('Are you sure you want to delete this record?');">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
+                        Delete
                     </button>
-                    {% endif %}
-                </div>                
-            </li>
-            
-            
-            {% endfor %}
+                </form>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+        <div class="mb-4">
+            <a href="{% url 'create_medical_record' %}"
+                class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+                Create New Medical Record
+            </a>
+        </div>
+
         {% else %}
-            <li class="bg-white shadow-md rounded-lg p-4">
-                <p class="text-gray-600">No medical records found.</p>
-            </li>
+        <li class="bg-white shadow-md rounded-lg p-4">
+            <p class="text-gray-600">No medical records found.</p>
+        </li>
         {% endif %}
     </ul>
-    <div class="mt-8">
-        {% comment %} <a href="{% url 'appointment_create' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-            Schedule New Appointment
-        </a> {% endcomment %}
-    </div>
 </div>
 {% endblock %}
