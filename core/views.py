@@ -1,15 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.models import LogEntry
 from .models import Patient, Appointment, Doctor, MedicalRecord
 from django.http import JsonResponse
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from datetime import datetime
 from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
+
 
 # Utility functions
 def is_admin(user):
@@ -267,7 +268,7 @@ def medical_record_list(request):
     }    
     return render(request, 'core/medical_records/medical_record_list.html', contexts)
 
-# @login_required
+@login_required
 def medical_record_detail(request, id):
     # Fetch the medical record for the specific patient
     medical_record = MedicalRecord.objects.get(pk=id)
@@ -275,10 +276,7 @@ def medical_record_detail(request, id):
     return render(request, 'core/medical_records/medical_record_detail.html', {'medical_record': medical_record})
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.core.files.storage import FileSystemStorage
-from .models import MedicalRecord
+
 
 
 @login_required
@@ -354,6 +352,7 @@ def update_medical_record(request, id):
 
 
 @login_required
+@user_passes_test(is_admin)
 def delete_medical_record(request, id):
     # Fetch the medical record based on the ID
     medical_record = get_object_or_404(MedicalRecord, id=id)
@@ -409,6 +408,7 @@ def doctor_details(request, pk):
 User = get_user_model()
 
 @login_required
+@user_passes_test(is_admin)
 def create_doctor(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -439,6 +439,7 @@ def create_doctor(request):
 
 
 @login_required
+@user_passes_test(is_admin)
 def update_doctor(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     
@@ -460,7 +461,8 @@ def update_doctor(request, doctor_id):
     return render(request, 'core/doctors/update_doctor_form.html', context)
     return render(request, 'core/doctors/doctor_form.html')
 
-
+@login_required
+@user_passes_test(is_admin)
 def delete_doctor(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     

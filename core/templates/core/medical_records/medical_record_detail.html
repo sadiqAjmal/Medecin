@@ -19,16 +19,14 @@
         <p><strong>Created At:</strong> {{ medical_record.created_at }}</p>
         <p><strong>Updated At:</strong> {{ medical_record.updated_at }}</p>
         
-        {% comment %} {% if user.is_authenticated and user.is_superuser %}
+        {% if user.is_authenticated and user.is_superuser %}
         <div class="mt-4">
-            <a href="{% url 'medical_record_edit' medical_record.pk %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block">
+            <a href="{% url 'update_medical_record' medical_record.pk %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block">
                 Edit
             </a>
-            <a href="{% url 'medical_record_delete' medical_record.pk %}" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 inline-block">
-                Delete
-            </a>
+           
         </div>
-        {% endif %} {% endcomment %}
+        {% endif %}
     </div>
     <div class="mt-8">
         <a href="{% url 'medical_record_list' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
