@@ -21,21 +21,26 @@
                         {{ patient.user.username }}
                     </a>
                 </div>
+               
                 <div class="space-x-2">
                     <a href="{% url 'patient_detail' patient.pk %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                         View Details
                     </a>
+                {% if user.is_superuser %}
                     <a href="{% url 'delete_patient' patient.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
                         Delete
                     </a>
                 </div>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
+    {% if user.is_superuser %}
     <div class="mt-8">
         <a href="{% url 'create_patient' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
             Create New Patient
         </a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

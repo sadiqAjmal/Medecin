@@ -28,17 +28,21 @@
                     <a href="{% url 'appointment_detail' appointment.id %}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
                         View Details
                     </a>
+                    {% if user.is_superuser %}
                     <a href="{% url 'delete_appointment' appointment.id %}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
                         Delete
                     </a>
+                    {% endif %}
                 </div>
             </li>
         {% endfor %}
     </ul>
+    {% if user.is_superuser %}
     <div class="mt-8">
         <a href="{% url 'create_appointment' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
             Schedule New Appointment
         </a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
