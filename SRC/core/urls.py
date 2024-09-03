@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 
+'''
+url patterns for the core app, these urls are used to navigate through the application
+'''
 urlpatterns = [
    
     # Admin URLs

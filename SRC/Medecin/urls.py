@@ -18,6 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
+'''
+url patterns for the Medecin app, these urls are used to navigate through the application,
+- admin: admin urls
+- accounts: authentication urls
+- core: core urls
+- users: users urls
+'''
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),  
