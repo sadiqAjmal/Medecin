@@ -14,7 +14,7 @@
             </li>
         {% endif %}
         {% for appointment in appointments %}
-            <li class="bg-white shadow-md rounded-lg p-4">
+            <li class="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
                 <div>
                     <strong>Patient:</strong> {{ appointment.patient.user.username }}
                 </div>
@@ -24,13 +24,21 @@
                 <div>
                     <strong>Doctor:</strong> {{ appointment.doctor.user.username }}
                 </div>
+                <div class="flex space-x-2">
+                    <a href="{% url 'appointment_detail' appointment.id %}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                        View Details
+                    </a>
+                    <a href="{% url 'delete_appointment' appointment.id %}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        Delete
+                    </a>
+                </div>
             </li>
         {% endfor %}
     </ul>
     <div class="mt-8">
-        {% comment %} <a href="{% url 'appointment_create' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+        <a href="{% url 'create_appointment' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
             Schedule New Appointment
-        </a> {% endcomment %}
+        </a>
     </div>
 </div>
 {% endblock %}
