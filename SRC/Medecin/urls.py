@@ -17,9 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from django.conf import settings
-from django.conf.urls.static import static
-
 
 '''
 url patterns for the Medecin app, these urls are used to navigate through the application,
@@ -36,7 +33,4 @@ urlpatterns = [
     path('', auth_views.LoginView.as_view(), name='login'),
     path('core/', include('core.urls')),
     path('redirect/', include('users.urls')),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-
+]
