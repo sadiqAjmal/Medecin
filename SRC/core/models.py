@@ -30,6 +30,7 @@ class Patient(models.Model):
     def details(self):    
         return f'{self.user.username} ({self.get_gender_display()}), born on {self.date_of_birth.strftime("%b %d, %Y")}'
 
+
 '''
 Doctor model is used to store the details of the doctor
 - user: reference to the User model
@@ -48,7 +49,7 @@ class Doctor(models.Model):
     '''
     def details(self):    
         return f"Doctor name is {self.user.first_name} with specialization of {self.specialization}"
-
+    
 '''
 MedicalRecord model is used to store the medical record of the patient
 - patient: reference to the Patient model
@@ -77,7 +78,7 @@ class MedicalRecord(models.Model):
     short_description method is used to return the short description of the diagnosis
     '''
     def short_description(self):
-        return f"{self.diagnosis[:50]}..."  
+        return f"{self.diagnosis[:50]}..."
 
 '''
 Appointment model is used to store the appointment of the patient
