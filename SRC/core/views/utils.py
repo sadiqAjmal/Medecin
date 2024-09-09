@@ -14,3 +14,11 @@ class DoctorRequiredMixin(UserPassesTestMixin):
 
     def handle_no_permission(self):
         raise PermissionDenied("You must be a doctor to access this page.")
+
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+def is_doctor(user):
+    return user.is_authenticated and hasattr(user, 'is_doctor') and user.is_doctor

@@ -1,107 +1,108 @@
+from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from core.models import Patient, Appointment, Doctor
 from django.utils import timezone
 from datetime import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView,UpdateView,DeleteView
+from django.urls import reverse_lazy
+from datetime import datetime
 
 
-@login_required
-def appointment_list(request):
-    if request.user.is_doctor:
-        appointments = Appointment.objects.filter(doctor=request.user.doctor)
-    else:
-        appointments = Appointment.objects.all()
-    # return JsonResponse({'appointments': list(appointments.values())})
-    return render(request, 'core/appointments/appointment_list.html', {'appointments': appointments})
+class AppointmentListView(LoginRequiredMixin, ListView):
+    template_name='core/appointments/appointment_list.html'
+    model = Appointment
+    context_object_name = 'appointments'
 
-@login_required
-def appointment_detail(request, appointment_id):
-    # Fetch the appointment based on the provided ID
-    appointment = get_object_or_404(Appointment, id=appointment_id)
-    # Pass the appointment object to the template
-    context = {
-        'appointment': appointment,
-    }
-    return render(request, 'core/appointments/appointment_detail.html', context)
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_doctor:
+            return Appointment.objects.filter(doctor=user.doctor)
+        else : 
+           return Appointment.objects.all() 
 
 
+class AppointmentDetailView(LoginRequiredMixin, DetailView):
+    model = Appointment
+    template_name = 'core/appointments/appointment_detail.html'
 
-@login_required
-def create_appointment(request):
-    if request.method == 'POST':
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+
+
+class AppointmentCreateView(LoginRequiredMixin, FormView):
+    template_name = 'core/appointments/appointment_form.html'
+    success_url = reverse_lazy('appointment_list')
+
+    def get(self, *args, **kwargs):
+        patients = Patient.objects.all()
+        doctors = Doctor.objects.all()
+        
+        context = {
+            'patients': patients,
+            'doctors': doctors
+        }
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
         patient_id = request.POST.get('patient')
         doctor_id = request.POST.get('doctor')
         scheduled_at = request.POST.get('scheduled_at')
-        
-        # Convert scheduled_at to a datetime object
+
         scheduled_at = timezone.make_aware(datetime.fromisoformat(scheduled_at))
 
         patient = get_object_or_404(Patient, id=patient_id)
         doctor = get_object_or_404(Doctor, id=doctor_id)
-        
-        appointment = Appointment.objects.create(
+
+        Appointment.objects.create(
             patient=patient,
             doctor=doctor,
             scheduled_at=scheduled_at
         )
-        
+
         messages.success(request, 'Appointment created successfully!')
-        return redirect('appointment_list')
-    
-    # Get available patients and doctors for the form
-    patients = Patient.objects.all()
-    doctors = Doctor.objects.all()
-    
-    context = {
-        'patients': patients,
-        'doctors': doctors
-    }
-    return render(request, 'core/appointments/appointment_form.html', context)
+        return super().form_valid(form=None)  
 
 
 
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    fields = ['patient', 'doctor', 'scheduled_at']
+    template_name = 'core/appointments/appointment_update_form.html'
+    
+    login_url = '/login/'
 
-@login_required
-def update_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id)
-    
-    if request.method == 'POST':
-        patient_id = request.POST.get('patient')
-        doctor_id = request.POST.get('doctor')
-        scheduled_at = request.POST.get('scheduled_at')
-        
-        # Convert scheduled_at to a datetime object
-        scheduled_at = timezone.make_aware(datetime.fromisoformat(scheduled_at))
-        
-        appointment.patient = get_object_or_404(Patient, id=patient_id)
-        appointment.doctor = get_object_or_404(Doctor, id=doctor_id)
-        appointment.scheduled_at = scheduled_at
-        
-        appointment.save()
-        
-        messages.success(request, 'Appointment updated successfully!')
-        return redirect('appointment_detail', appointment_id=appointment.id)
-    
-    patients = Patient.objects.all()
-    doctors = Doctor.objects.all()
-    
-    context = {
-        'appointment': appointment,
-        'patients': patients,
-        'doctors': doctors
-    }
-    return render(request, 'core/appointments/appointment_update_form.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['patients'] = Patient.objects.all()
+        context['doctors'] = Doctor.objects.all()
+        return context
 
+    def form_valid(self, form):
+        form.instance.scheduled_at = timezone.make_aware(datetime.fromisoformat(form.cleaned_data['scheduled_at']))
+        response = super().form_valid(form)
+        messages.success(self.request, 'Appointment updated successfully!')
+        return response
 
-@login_required
-def delete_appointment(request, appointment_id):
-    # Fetch the appointment based on the provided ID
-    appointment = get_object_or_404(Appointment, id=appointment_id)
+    def get_success_url(self):
+        return reverse_lazy('appointment_detail', kwargs={'appointment_id': self.object.id})
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    template_name = 'core/appointments/appointment_confirm_delete.html'
+    success_url = reverse_lazy('appointment_list')
     
-    if request.method == 'POST':
-        appointment.delete()
+    login_url = '/login/'
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
         messages.success(request, 'Appointment deleted successfully!')
-        return redirect('appointment_list')  # Redirect to the appointment list view
-    
-    return render(request, 'core/appointments/appointment_confirm_delete.html', {'appointment': appointment})
+        return response
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Appointment, pk=self.kwargs['pk'])
