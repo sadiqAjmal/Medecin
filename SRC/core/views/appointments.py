@@ -5,6 +5,7 @@ from core.models import Patient, Appointment, Doctor
 from django.utils import timezone
 from datetime import datetime
 
+
 @login_required
 def appointment_list(request):
     if request.user.is_doctor:
