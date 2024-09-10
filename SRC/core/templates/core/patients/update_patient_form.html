@@ -12,30 +12,30 @@
         {% csrf_token %}
         <div class="mb-4">
             <label for="username" class="block text-gray-700">Username:</label>
-            <input type="text" id="username" name="username" value="{{ patient.user.username }}" required class="border rounded p-2 w-full" />
+            <input type="text" id="username" name="username" value="{{ form.initial.username }}" required class="border rounded p-2 w-full" />
         </div>
 
         <div class="mb-4">
             <label for="email" class="block text-gray-700">Email:</label>
-            <input type="email" id="email" name="email" value="{{ patient.user.email }}" required class="border rounded p-2 w-full" />
+            <input type="email" id="email" name="email" value="{{ form.initial.email }}" required class="border rounded p-2 w-full" />
         </div>
 
         <div class="mb-4">
             <label for="phone_number" class="block text-gray-700">Phone Number:</label>
-            <input type="text" id="phone_number" name="phone_number" value="{{ patient.user.phone_number }}" required class="border rounded p-2 w-full" />
+            <input type="text" id="phone_number" name="phone_number" value="{{ form.initial.phone_number }}" required class="border rounded p-2 w-full" />
         </div>
 
         <div class="mb-4">
             <label for="gender" class="block text-gray-700">Gender:</label>
             <select id="gender" name="gender" required class="border rounded p-2 w-full">
-                <option value="M" {% if patient.gender == 'M' %}selected{% endif %}>Male</option>
-                <option value="F" {% if patient.gender == 'F' %}selected{% endif %}>Female</option>
+                <option value="M" {% if form.initial.gender == 'M' %}selected{% endif %}>Male</option>
+                <option value="F" {% if form.initial.gender == 'F' %}selected{% endif %}>Female</option>
             </select>
         </div>
 
         <div class="mb-4">
             <label for="date_of_birth" class="block text-gray-700">Date of Birth:</label>
-            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ patient.date_of_birth }}" required class="border rounded p-2 w-full" />
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form.initial.date_of_birth }}" required class="border rounded p-2 w-full" />
         </div>
 
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Update Patient</button>
