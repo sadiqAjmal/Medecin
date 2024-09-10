@@ -7,6 +7,7 @@ class DoctorForm(forms.ModelForm):
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15)
     password = forms.CharField(widget=forms.PasswordInput(render_value=False), required=False)
+
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if self.instance.pk:  
@@ -39,12 +40,13 @@ class DoctorForm(forms.ModelForm):
             self.fields['email'].initial = instance.user.email
             self.fields['phone_number'].initial = instance.user.phone_number
             self.fields['password'].required = False
-        
+
 class PatientForm(forms.ModelForm):
     username = forms.CharField(max_length=50)
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15)
     password = forms.CharField(widget=forms.PasswordInput(render_value=False), required=False)
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -79,6 +81,3 @@ class PatientForm(forms.ModelForm):
             self.fields['email'].initial = instance.user.email
             self.fields['phone_number'].initial = instance.user.phone_number
             self.fields['password'].required = False
-
-
-

@@ -27,7 +27,7 @@
                         View Details
                     </a>
                 {% if user.is_superuser %}
-                    <a href="{% url 'delete_patient' patient.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    <a href="{% url 'delete_patient' patient.user.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
                         Delete
                     </a>
                 </div>

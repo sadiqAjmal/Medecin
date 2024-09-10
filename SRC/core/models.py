@@ -15,7 +15,6 @@ class Patient(models.Model):
     
     # Correct reference to User model
     user = models.OneToOneField(User, on_delete=models.CASCADE, limit_choices_to={'is_patient': True})
-  
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)

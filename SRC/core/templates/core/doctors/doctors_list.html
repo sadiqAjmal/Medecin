@@ -74,7 +74,7 @@
                         <a href="{% url 'doctor_details' doctor.pk %}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
                             View Details
                         </a>
-                        <a href="{% url 'delete_doctor' doctor.pk %}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        <a href="{% url 'delete_doctor' doctor.user.pk %}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
                             Delete
                         </a>
                     </div>
