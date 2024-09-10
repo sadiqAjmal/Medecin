@@ -25,5 +25,13 @@ def is_doctor(user):
     return user.is_authenticated and hasattr(user, 'is_doctor') and user.is_doctor
 
 
-def invalidate_cache_for_user(doctor_id=None):
-    cache.clear()
+def invalidate_cache(doctor_id,appointment_id):
+    # Delete all cache entries related to the specific doctor
+    cache_key_pattern_doctor = f"appointments_page_*_{doctor_id}_doctor"
+    cache.delete_pattern(cache_key_pattern_doctor)
+
+    # Delete all cache entries starting with 'appointments' and ending with 'admin'
+    cache_key_pattern_admin = "appointments*admin"
+    cache.delete_pattern(cache_key_pattern_admin)
+
+    cache.delete(f'appointment_{appointment_id}')

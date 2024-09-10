@@ -1,34 +1,24 @@
+from django.core.cache import cache
+from django.core.paginator import Paginator
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from core.models import Appointment
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from core.models import Appointment, Doctor, Patient
 from django.utils import timezone
-from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django import forms
 from django.core.cache import cache
-from django.db import DatabaseError, transaction
+from django.db import transaction
 from core.forms import AppointmentFilterForm
 from django.views import View
 from django.shortcuts import render
-from django.db.models import Count
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.core.paginator import Paginator
-from django.core.cache import cache
-from django.core.cache import cache
-from django.core.paginator import Paginator
-from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-from django.core.paginator import Paginator
-from django.core.cache import cache
-from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .utils import invalidate_cache_for_user
-
+from .utils import invalidate_cache
 
 class AppointmentListView(LoginRequiredMixin, ListView):
     """
@@ -71,7 +61,12 @@ class AppointmentListView(LoginRequiredMixin, ListView):
         # If not cached, paginate the queryset
         paginator = Paginator(queryset, page_size)
         page = paginator.get_page(page_number)
-
+        
+        # Cache each appointment individually
+        for appointment in page.object_list:
+            appointment_cache_key = f"appointment_{appointment.id}"
+            cache.set(appointment_cache_key, appointment, self.cache_timeout)
+        
         # Cache the result for the current page
         cache.set(cache_key, page, self.cache_timeout)
 
@@ -100,6 +95,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
         })
 
         return context
+
 
 
     
@@ -163,7 +159,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
 
                 messages.success(self.request, 'Appointment created successfully!')
 
-                invalidate_cache_for_user(doctor_id=form.cleaned_data['doctor'].id)
+                invalidate_cache(doctor_id=form.cleaned_data['doctor'].id,appointment_id=form.instance.id)
 
                 return response
         except Exception as e:
@@ -210,7 +206,7 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
                 response = super().form_valid(form)
 
                 messages.success(self.request, 'Appointment updated successfully!')
-                invalidate_cache_for_user(doctor_id=form.cleaned_data['doctor'].id)
+                invalidate_cache(doctor_id=form.cleaned_data['doctor'].id,appointment_id=form.instance.id)
 
                 return response
         except Exception as e:
@@ -231,10 +227,13 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
         Delete the appointment and display success message.
         """
         try:
+            appointment = self.get_object()
+            doctor_id = appointment.doctor.id
+            appointment_id = appointment.id
             with transaction.atomic():
                 response = super().delete(request, *args, **kwargs)
                 messages.success(request, 'Appointment deleted successfully!')
-                invalidate_cache_for_user()
+                invalidate_cache(appointment_id=appointment_id, doctor_id=doctor_id)
                 return response
         except Exception as e:
             messages.error(request, f"An error occurred while deleting the appointment: {e}")

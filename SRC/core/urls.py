@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import dashboard,patient,doctor,medical_record,appointments
+from django.views.decorators.cache import cache_page
 '''
 url patterns for the core app, these urls are used to navigate through the application
 '''
