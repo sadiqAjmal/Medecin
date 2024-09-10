@@ -1,7 +1,9 @@
 from django.shortcuts import redirect, render
-from django.views import View, RedirectView
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import LoginForm
+from django.views.generic import RedirectView
+from django.urls import reverse
 
 class RoleBasedRedirectView(LoginRequiredMixin, RedirectView):
     """
@@ -14,11 +16,11 @@ class RoleBasedRedirectView(LoginRequiredMixin, RedirectView):
         """
         user = self.request.user
         if user.is_staff:
-            return 'admin_dashboard'  # Redirect to custom admin dashboard
+            return reverse('admin_dashboard')  # Redirect to custom admin dashboard
         elif user.is_doctor:
-            return 'doctor_dashboard'  # Redirect to custom doctor dashboard
+            return reverse('doctor_dashboard')  # Redirect to custom doctor dashboard
         else:
-            return 'default_dashboard'  # Redirect to a general dashboard or homepage
+            return reverse('default_dashboard')  # Redirect to a general dashboard or homepage
 
 
 class LoginView(View):
