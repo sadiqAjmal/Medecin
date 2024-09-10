@@ -1,75 +1,20 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-    Update Medical Record
+    {{ title }}
 {% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto mt-8">
-    <h2 class="text-2xl font-bold mb-4">Update Medical Record</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2 class="text-2xl font-bold mb-4">{{title}}</h2>
+    {% if form.errors %}
+        <p class="text-red-500">Please correct the error{{ form.errors|pluralize }} below.</p>
+    {% endif %}
+
+    <form method="post" class="bg-gray-200 p-4 rounded-lg">
         {% csrf_token %}
-
-        <input type="hidden" name="id" value="{{ medical_record.id }}">
-
-        <div class="mb-4">
-            <label for="patient" class="block text-sm font-medium text-gray-700">Patient</label>
-            <select name="patient" id="patient" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                {% for patient in patients %}
-                    <option value="{{ patient.id }}" {% if patient.id == medical_record.patient.id %}selected{% endif %}>{{ patient.user.username }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="mb-4">
-            <label for="doctor" class="block text-sm font-medium text-gray-700">Doctor</label>
-            <select name="doctor" id="doctor" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                {% for doctor in doctors %}
-                    <option value="{{ doctor.id }}" {% if doctor.id == medical_record.doctor.id %}selected{% endif %}>{{ doctor.user.username }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="mb-4">
-            <label for="appointment" class="block text-sm font-medium text-gray-700">Appointment</label>
-            <select name="appointment" id="appointment" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                {% for appointment in appointments %}
-                    <option value="{{ appointment.id }}" {% if appointment.id == medical_record.appointment.id %}selected{% endif %}>{{ appointment.patient.user.username }} - {{ appointment.scheduled_at }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="mb-4">
-            <label for="diagnosis" class="block text-sm font-medium text-gray-700">Diagnosis</label>
-            <textarea name="diagnosis" id="diagnosis" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ medical_record.diagnosis }}</textarea>
-        </div>
-
-        <div class="mb-4">
-            <label for="treatment" class="block text-sm font-medium text-gray-700">Treatment</label>
-            <textarea name="treatment" id="treatment" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ medical_record.treatment }}</textarea>
-        </div>
-
-        <div class="mb-4">
-            <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
-            <textarea name="notes" id="notes" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ medical_record.notes }}</textarea>
-        </div>
-
-        <div class="mb-4">
-            <label for="report" class="block text-sm font-medium text-gray-700">Report (optional)</label>
-            <input type="file" name="report" id="report" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-            {% if medical_record.report %}
-                <p>Current Report: <a href="{{ medical_record.report.url }}" class="text-blue-600 hover:underline">Download</a></p>
-            {% endif %}
-        </div>
-
-        <div class="mt-4">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Save Changes
-            </button>
-            <a href="{% url 'medical_record_list' %}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
-                Cancel
-            </a>
-        </div>
+        {{ form.as_p }}
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{button_name}}</button>
     </form>
 </div>
 {% endblock %}
