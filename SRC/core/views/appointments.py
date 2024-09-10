@@ -10,6 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django import forms
 from django.core.cache import cache
+from django.db import DatabaseError, transaction
 
 class AppointmentListView(LoginRequiredMixin, ListView):
     """
@@ -76,26 +77,39 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         return form
 
     def get_context_data(self, **kwargs):
+
         """
-        Get the context data for the view.
+        Get the context data for the view with transaction handling.
         """
+      
         context = super().get_context_data(**kwargs)
+                
         context['patients'] = Patient.objects.all()
         context['doctors'] = Doctor.objects.all()
+
         return context
+
+
 
     def form_valid(self, form):
         """
-        Validate the form and save the appointment.
+        Validate the form and save the appointment within a transaction.
         """
-        # Check if the 'scheduled_at' is not already a timezone-aware datetime object
-        if not timezone.is_aware(form.cleaned_data['scheduled_at']):
-            form.instance.scheduled_at = timezone.make_aware(form.cleaned_data['scheduled_at'])
-        
-        response = super().form_valid(form)
-        messages.success(self.request, 'Appointment created successfully!')
-        cache.clear()  # Clear cache after creating a new appointment
-        return response
+        try:
+            with transaction.atomic():
+                if not timezone.is_aware(form.cleaned_data['scheduled_at']):
+                    form.instance.scheduled_at = timezone.make_aware(form.cleaned_data['scheduled_at'])
+
+                response = super().form_valid(form)
+
+                messages.success(self.request, 'Appointment created successfully!')
+
+                cache.clear()
+
+                return response
+        except Exception as e:
+            form.add_error(None, f"An error occurred while saving the appointment: {e}")
+            return self.form_invalid(form)
 
 
 class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
@@ -127,13 +141,22 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         """
-        Validate the form and save the updated appointment.
+        Validate the form and save the updated appointment within a transaction.
         """
-        form.instance.scheduled_at = timezone.make_aware(datetime.fromisoformat(form.cleaned_data['scheduled_at']))
-        response = super().form_valid(form)
-        messages.success(self.request, 'Appointment updated successfully!')
-        cache.clear()  # Clear cache after updating an appointment
-        return response
+        try:
+            with transaction.atomic():
+                if not timezone.is_aware(form.cleaned_data['scheduled_at']):
+                    form.instance.scheduled_at = timezone.make_aware(form.cleaned_data['scheduled_at'])
+
+                response = super().form_valid(form)
+
+                messages.success(self.request, 'Appointment updated successfully!')
+                cache.clear()  
+
+                return response
+        except Exception as e:
+            form.add_error(None, f"An error occurred while updating the appointment: {e}")
+            return self.form_invalid(form)
 
 
 class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
@@ -148,11 +171,19 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
         """
         Delete the appointment and display success message.
         """
-        response = super().delete(request, *args, **kwargs)
-        messages.success(request, 'Appointment deleted successfully!')
-        cache.clear()  # Clear cache after deleting an appointment
-        return response
-
+        try:
+            with transaction.atomic():
+                response = super().delete(request, *args, **kwargs)
+                
+                cache.clear()
+                
+                messages.success(request, 'Appointment deleted successfully!')
+                
+                return response
+        except Exception as e:
+            messages.error(request, f"An error occurred while deleting the appointment: {e}")
+            return self.render_to_response(self.get_context_data())
+    
     def get_object(self, queryset=None):
         """
         Get the appointment object for the view.

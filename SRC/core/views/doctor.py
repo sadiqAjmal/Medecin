@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .utils import AdminRequiredMixin
 from core.forms import DoctorForm
+from django.db import transaction
 
 class DoctorDashboardView(LoginRequiredMixin, TemplateView):
     """
@@ -84,17 +85,21 @@ class DoctorCreateView(AdminRequiredMixin, CreateView):
         """
         Save the form data and create a new user.
         """
-        user = User.objects.create(
-            username=form.cleaned_data['username'],
-            email=form.cleaned_data['email'],
-            phone_number=form.cleaned_data['phone_number']
-        )
-        user.set_password(form.cleaned_data['password'])
-        user.is_doctor = True
-        user.save()
-        form.instance.user = user
-        return super().form_valid(form)
-
+        try:
+            with transaction.atomic():
+                user = User.objects.create(
+                    username=form.cleaned_data['username'],
+                    email=form.cleaned_data['email'],
+                    phone_number=form.cleaned_data['phone_number']
+                )
+                user.set_password(form.cleaned_data['password'])
+                user.is_doctor = True
+                user.save()
+                form.instance.user = user
+                return super().form_valid(form)
+        except Exception as e:
+            form.add_error(None, "An error occurred while creating the user. Please try again.")
+            return self.form_invalid(form)
     def get_context_data(self, **kwargs):
         """
         Get the context data for the doctor create view.
@@ -117,15 +122,20 @@ class DoctorUpdateView(AdminRequiredMixin, UpdateView):
         """
         Save the form data and update the user's information.
         """
-        if form.is_valid():
-            user = form.instance.user
-            user.username = form.cleaned_data['username']
-            user.email = form.cleaned_data['email']
-            user.phone_number = form.cleaned_data['phone_number']
-            if form.cleaned_data['password']:
-                user.set_password(form.cleaned_data['password'])
-            user.save()
-        return super().form_valid(form)
+        try:
+            with transaction.atomic():
+                if form.is_valid():
+                    user = form.instance.user
+                    user.username = form.cleaned_data['username']
+                    user.email = form.cleaned_data['email']
+                    user.phone_number = form.cleaned_data['phone_number']
+                    if form.cleaned_data['password']:
+                        user.set_password(form.cleaned_data['password'])
+                    user.save()
+                return super().form_valid(form)
+        except Exception as e:
+            form.add_error(None, "An error occurred while creating the user. Please try again.")
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         """
@@ -143,3 +153,8 @@ class DoctorDeleteView(AdminRequiredMixin, DeleteView):
     model = User
     template_name = 'core/doctors/doctor_confirm_delete.html'
     success_url = reverse_lazy('doctor_list')
+    @transaction.atomic
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        with transaction.atomic():
+            return super().delete(request, *args, **kwargs)

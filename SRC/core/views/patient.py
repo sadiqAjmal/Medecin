@@ -41,15 +41,17 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
  
     def form_valid(self, form):
         try:
-            user = User.objects.create(
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-                phone_number=form.cleaned_data['phone_number']
-            )
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            form.instance.user = user
-            return super().form_valid(form)
+            with transaction.atomic():
+                user = User.objects.create(
+                    username=form.cleaned_data['username'],
+                    email=form.cleaned_data['email'],
+                    phone_number=form.cleaned_data['phone_number']
+                )
+                user.set_password(form.cleaned_data['password'])
+                user.is_patient = True
+                user.save()
+                form.instance.user = user
+                return super().form_valid(form)
         except Exception as e:
             form.add_error(None, "An error occurred while creating the user. Please try again.")
             return self.form_invalid(form)
@@ -68,15 +70,18 @@ class PatientUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('patient_list')
  
     def form_valid(self, form):
-        user = form.instance.user
-        user.username = form.cleaned_data['username']
-        user.email = form.cleaned_data['email']
-        user.phone_number = form.cleaned_data['phone_number']
-        if form.cleaned_data['password']:
-            user.set_password(form.cleaned_data['password'])
- 
-        user.save()
-        return super().form_valid(form)
+        try:
+            user = form.instance.user
+            user.username = form.cleaned_data['username']
+            user.email = form.cleaned_data['email']
+            user.phone_number = form.cleaned_data['phone_number']
+            if form.cleaned_data['password']:
+                user.set_password(form.cleaned_data['password'])
+            user.save()
+            return super().form_valid(form)
+        except Exception as e:
+            form.add_error(None, "An error occurred while creating the user. Please try again.")
+            return self.form_invalid(form)
    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -88,5 +93,11 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
     model = User
     template_name = 'core/patients/patient_confirm_delete.html'
     success_url = reverse_lazy('patient_list')
+
+    @transaction.atomic
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        with transaction.atomic():
+            return super().delete(request, *args, **kwargs)
  
  
