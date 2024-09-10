@@ -117,7 +117,7 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     View for updating an existing appointment.
     """
     model = Appointment
-    fields = ['patient', 'doctor', 'scheduled_at']
+    fields = ['is_completed','patient', 'doctor', 'scheduled_at']
     template_name = 'core/appointments/appointment_update_form.html'
     success_url = reverse_lazy('appointment_list')
 

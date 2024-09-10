@@ -19,6 +19,7 @@
         <p><strong>Patient:</strong> {{ appointment.patient.user.username }}</p>
         <p><strong>Doctor:</strong> {{ appointment.doctor.user.username }}</p>
         <p><strong>Scheduled At:</strong> {{ appointment.scheduled_at }}</p>
+        <p><strong>Status :</strong> {%if appointment.is_completed%}Completed{%else%}Pending{%endif%}</p>
         <p><strong>Created At:</strong> {{ appointment.created_at }}</p>
         <p><strong>Updated At:</strong> {{ appointment.updated_at }}</p>
     </div>

@@ -19,7 +19,7 @@ AppointmentAdmin class is used to display the appointment model in the admin pan
 '''
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'doctor', 'scheduled_at', 'created_at', 'updated_at')
+    list_display = ('patient', 'doctor', 'scheduled_at','is_completed' ,'created_at', 'updated_at')
     search_fields = ('patient__name', 'doctor__name')
     list_filter = ['scheduled_at']
 
