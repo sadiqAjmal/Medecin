@@ -21,7 +21,7 @@ class PatientListView(LoginRequiredMixin, ListView):
     paginate_by = 5
     def get_queryset(self):
         if self.request.user.is_doctor:
-            return Patient.objects.filter(appointment__doctor=self.request.user.doctor)
+            return Patient.objects.filter(appointment__doctor=self.request.user.doctor).order_by("user__username")
         return Patient.objects.all()
    
     login_url = '/login/'

@@ -30,7 +30,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
             cache_key = f"doctor_appointments_{user.doctor.id}"
             appointments = cache.get(cache_key)
             if not appointments:
-                appointments = Appointment.objects.filter(doctor=user.doctor)
+                appointments = Appointment.objects.filter(doctor=user.doctor).order_by('-scheduled_at')
                 cache.set(cache_key, appointments)
             return appointments
         else:

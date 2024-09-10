@@ -22,7 +22,7 @@ class DoctorDashboardView(LoginRequiredMixin, TemplateView):
         """
         context = super().get_context_data(**kwargs)
         context['patients'] = Patient.objects.filter(appointment__doctor=self.request.user.doctor)
-        context['appointments'] = Appointment.objects.filter(doctor=self.request.user.doctor)
+        context['appointments'] = Appointment.objects.filter(doctor=self.request.user.doctor).order_by('-scheduled_at')
         context['doctor'] = Doctor.objects.get(user=self.request.user)
         return context
 
@@ -47,9 +47,9 @@ class DoctorListView(LoginRequiredMixin, ListView):
                 Q(user__username__icontains=query) |
                 Q(user__phone_number__icontains=query) |
                 Q(user__email__icontains=query)
-            )
+            ).order_by('user__username')
         if specialization_filter:
-            doctors = doctors.filter(specialization__icontains=specialization_filter)
+            doctors = doctors.filter(specialization__icontains=specialization_filter).order_by('user__username')
         return doctors
 
     def get_context_data(self, **kwargs):

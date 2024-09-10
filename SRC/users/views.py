@@ -32,6 +32,7 @@ class LoginView(View):
         Handles GET request for login page.
         If the user is already authenticated, redirects to role-based redirection view.
         """
+        print(request.user)
         if request.user.is_authenticated:
             return redirect('role_based_redirect')
         form = LoginForm()
