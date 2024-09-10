@@ -3,6 +3,8 @@ from .models import Doctor, Patient
 from users.models import User
 
 class DoctorForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
     username = forms.CharField(max_length=50)
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15)
@@ -42,6 +44,8 @@ class DoctorForm(forms.ModelForm):
             self.fields['password'].required = False
 
 class PatientForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
     username = forms.CharField(max_length=50)
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15)

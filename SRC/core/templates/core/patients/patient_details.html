@@ -13,6 +13,7 @@
         </a>
         {% endif %}
         <h2 class="text-2xl font-bold mb-4">{{ patient.user.username }}</h2>
+        <p><strong>Name:</strong> {{ patient.user.get_full_name }}</p>
         <p><strong>Email:</strong> {{ patient.user.email }}</p>
         <p><strong>Phone:</strong> {{ patient.user.phone_number }}</p>
         <p><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
