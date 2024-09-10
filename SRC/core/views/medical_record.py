@@ -20,8 +20,8 @@ class MedicalRecordListView(LoginRequiredMixin, ListView):
         Returns the queryset of medical records based on the user's role.
         """
         if self.request.user.is_doctor:
-            return MedicalRecord.objects.filter(patient__appointment__doctor=self.request.user.doctor)
-        return MedicalRecord.objects.all()
+            return MedicalRecord.objects.filter(patient__appointment__doctor=self.request.user.doctor).order_by('-updated_at')
+        return MedicalRecord.objects.all().order_by('-updated_at')
 
     def get_context_data(self, **kwargs):
         """
