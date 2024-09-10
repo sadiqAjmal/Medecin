@@ -90,7 +90,9 @@ class DoctorCreateView(AdminRequiredMixin, CreateView):
                 user = User.objects.create(
                     username=form.cleaned_data['username'],
                     email=form.cleaned_data['email'],
-                    phone_number=form.cleaned_data['phone_number']
+                    phone_number=form.cleaned_data['phone_number'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name']
                 )
                 user.set_password(form.cleaned_data['password'])
                 user.is_doctor = True
@@ -129,6 +131,8 @@ class DoctorUpdateView(AdminRequiredMixin, UpdateView):
                     user.username = form.cleaned_data['username']
                     user.email = form.cleaned_data['email']
                     user.phone_number = form.cleaned_data['phone_number']
+                    user.first_name=form.cleaned_data['first_name']
+                    user.last_name=form.cleaned_data['last_name']
                     if form.cleaned_data['password']:
                         user.set_password(form.cleaned_data['password'])
                     user.save()

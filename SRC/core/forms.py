@@ -12,22 +12,14 @@ class DoctorForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if self.instance.pk:  
-            if User.objects.filter(username=username).exclude(id=self.instance.user.id).exists():
-                raise forms.ValidationError("This username is already in use.")
-        else:  
-            if User.objects.filter(username=username).exists():
-                raise forms.ValidationError("This username is already in use.")
+        if User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
+            raise forms.ValidationError("This username is already in use.")
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if self.instance.pk: 
-            if User.objects.filter(email=email).exclude(id=self.instance.user.id).exists():
-                raise forms.ValidationError("This email is already in use.")
-        else:  
-            if User.objects.filter(email=email).exists():
-                raise forms.ValidationError("This email is already in use.")
+        if User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
+            raise forms.ValidationError("This email is already in use.")
         return email
     
     class Meta:
@@ -54,22 +46,14 @@ class PatientForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if self.instance.pk:  
-            if User.objects.filter(username=username).exclude(id=self.instance.user.id).exists():
-                raise forms.ValidationError("This username is already in use.")
-        else:  
-            if User.objects.filter(username=username).exists():
-                raise forms.ValidationError("This username is already in use.")
+        if User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
+            raise forms.ValidationError("This username is already in use.")
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if self.instance.pk: 
-            if User.objects.filter(email=email).exclude(id=self.instance.user.id).exists():
-                raise forms.ValidationError("This email is already in use.")
-        else:  
-            if User.objects.filter(email=email).exists():
-                raise forms.ValidationError("This email is already in use.")
+        if User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
+            raise forms.ValidationError("This email is already in use.")
         return email
 
     class Meta:
@@ -85,3 +69,14 @@ class PatientForm(forms.ModelForm):
             self.fields['email'].initial = instance.user.email
             self.fields['phone_number'].initial = instance.user.phone_number
             self.fields['password'].required = False
+
+
+class AppointmentFilterForm(forms.Form):
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    doctor_name = forms.CharField(max_length=50, required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_date'].widget.attrs.update({'class': 'form-control'})
+        self.fields['end_date'].widget.attrs.update({'class': 'form-control'})
+        self.fields['doctor_name'].widget.attrs.update({'class': 'form-control'})

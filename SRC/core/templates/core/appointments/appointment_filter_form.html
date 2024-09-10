@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Filter Appointments
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Filter Appointments</h1>
+    <form method="post" class="bg-white p-2 rounded shadow-md flex items-center space-x-2">
+        {% csrf_token %}
+        <div class="flex flex-col">
+            <label for="id_start_date" class="block text-gray-700 font-bold mb-1">Start Date:</label>
+            {{ form.start_date }}
+        </div>
+        <div class="flex flex-col">
+            <label for="id_end_date" class="block text-gray-700 font-bold mb-1">End Date:</label>
+            {{ form.end_date }}
+        </div>
+        <div class="flex flex-col">
+            <label for="id_doctor_name" class="block text-gray-700 font-bold mb-1">Doctor Name:</label>
+            {{ form.doctor_name }}
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+            Filter
+        </button>
+    </form>
+
+    {% if appointment_counts %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+        {% for appointment_count in appointment_counts %}
+            <div class="bg-white shadow-md rounded-lg p-6 text-center">
+                <p class="text-xl font-semibold text-gray-800 mb-4">{{ appointment_count.scheduled_at__date }}</p>
+                <p class="text-lg text-gray-600 mb-2">Total Appointments: {{ appointment_count.count }}</p>
+                <p class="text-md text-gray-500 mb-1">Pending: {{ appointment_count.pending_count }}</p>
+                <p class="text-md text-gray-500">Completed: {{ appointment_count.completed_count }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

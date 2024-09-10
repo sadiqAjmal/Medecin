@@ -13,6 +13,7 @@
                 <p class="text-gray-600">No appointments found.</p>
             </li>
         {% endif %}
+        {% cache 900 appointments_page request.user.id page_obj.number %}
         {% for appointment in appointments %}
             <li class="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
                 <div>
@@ -36,13 +37,15 @@
                 </div>
             </li>
         {% endfor %}
+        {}
     </ul>
+    
     {% if user.is_superuser %}
     <div class="mt-8">
         <a href="{% url 'create_appointment' %}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
             Schedule New Appointment
         </a>
     </div>
-    {% endif %}    
+    {% endif %}
 </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 
 class AdminRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -22,3 +23,7 @@ def is_admin(user):
 
 def is_doctor(user):
     return user.is_authenticated and hasattr(user, 'is_doctor') and user.is_doctor
+
+
+def invalidate_cache_for_user(doctor_id=None):
+    cache.clear()
