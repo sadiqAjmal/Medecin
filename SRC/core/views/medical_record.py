@@ -68,6 +68,87 @@ class MedicalRecordDetailView(LoginRequiredMixin, DetailView):
         logger.info(f"MedicalRecordDetailView accessed for record ID {self.kwargs['pk']} by user {self.request.user.id}")
         return super().get_context_data(**kwargs)
 
+class MedicalRecordCreateView(LoginRequiredMixin, CreateView):
+    """
+    View for creating a new medical record.
+    """
+    model = MedicalRecord
+    fields = ['appointment', 'diagnosis', 'treatment', 'notes', 'report']
+    template_name = 'core/medical_records/medical_record_form.html'
+    success_url = reverse_lazy('medical_record_list')
+
+    def get_context_data(self, **kwargs):
+        """
+        Adds additional context data to the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Create Medical Record'
+        context['button_name'] = 'Create'
+        return context
+
+    def get_form(self, form_class=None):
+        """
+        Override to filter appointments based on user type.
+        """
+        form = super().get_form(form_class)
+        user = self.request.user
+
+        if user.is_superuser:
+            form.fields['appointment'].queryset = Appointment.objects.all()
+        elif user.is_doctor:
+            form.fields['appointment'].queryset = Appointment.objects.filter(doctor=user.doctor)
+        else:
+            form.fields['appointment'].queryset = Appointment.objects.none()
+
+        return form
+
+    def form_valid(self, form):
+        """
+        Validate the form and save the medical record within a transaction.
+        """
+        try:
+            with transaction.atomic():
+                form.instance.patient = form.instance.appointment.patient
+
+                response = super().form_valid(form)
+                logger.info(f"Medical record created successfully with ID {self.object.id} by user {self.request.user.id}")
+                return response
+        except Exception as e:
+            logger.error(f"Error creating medical record: {e}", exc_info=True)
+            form.add_error(None, "An error occurred while creating the medical record. Please try again.")
+            return self.form_invalid(form)
+
+class MedicalRecordUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    View for updating an existing medical record.
+    """
+    model = MedicalRecord
+    fields = ['diagnosis', 'treatment', 'notes', 'report']
+    template_name = 'core/medical_records/medical_record_form.html'
+    success_url = reverse_lazy('medical_record_list')
+
+    def get_context_data(self, **kwargs):
+        """
+        Adds additional context data to the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Update Medical Record'
+        context['button_name'] = 'Update'
+        return context
+
+    def form_valid(self, form):
+        """
+        Validate the form and save the updated medical record within a transaction.
+        """
+        try:
+            with transaction.atomic():
+                response = super().form_valid(form)
+                logger.info(f"Medical record updated successfully with ID {self.object.id} by user {self.request.user.id}")
+                return response
+        except Exception as e:
+            logger.error(f"Error updating medical record: {e}")
+            form.add_error(None, "An error occurred while updating the medical record. Please try again.")
+            return self.form_invalid(form)
 
 
 class MedicalRecordDeleteView(LoginRequiredMixin, DeleteView):

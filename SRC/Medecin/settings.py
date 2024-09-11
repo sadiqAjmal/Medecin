@@ -110,6 +110,13 @@ LANGUAGE_CODE = 'en-us'
 
 import os
 
+# Define the logs directory
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+
+# Ensure the logs directory exists
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
