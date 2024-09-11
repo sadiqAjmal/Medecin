@@ -11,10 +11,12 @@
         <p class="text-red-500">Please correct the error{{ form.errors|pluralize }} below.</p>
     {% endif %}
 
-    <form method="post" class="bg-gray-200 p-4 rounded-lg">
+    <form method="post" class="bg-gray-200 p-4 rounded-lg" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{button_name}}</button>
+
     </form>
 </div>
 {% endblock %}

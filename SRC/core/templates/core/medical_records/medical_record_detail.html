@@ -15,13 +15,15 @@
         {% endif %}
     </div>
     <div class="bg-white shadow-md rounded-lg p-4">
-        <p><strong>Patient:</strong> {{ medical_record.patient.user.username }}</p>
-        <p><strong>Doctor:</strong> {{ medical_record.doctor.user.username }}</p>
+        <p><strong>Patient:</strong> {{ medical_record.appointment.patient.user.username }}</p>
+        <p><strong>Doctor:</strong> {{ medical_record.appointment.doctor.user.username }}</p>
         <p><strong>Diagnosis:</strong> {{ medical_record.diagnosis }}</p>
         <p><strong>Treatment:</strong> {{ medical_record.treatment }}</p>
         <p><strong>Notes:</strong> {{ medical_record.notes }}</p>
         {% if medical_record.report %}
-            <p><strong>Report:</strong> <a href="{{ medical_record.report.url }}" class="text-blue-600">Download</a></p>
+            <p><strong>Report:</strong> <a href="{{ medical_record.report.url }}" class="text-blue-600" target="_blank">View</a></p>
+        {% else %}
+            <p><strong>Report:</strong> No report uploaded.</p>
         {% endif %}
         <p><strong>Created At:</strong> {{ medical_record.created_at }}</p>
         <p><strong>Updated At:</strong> {{ medical_record.updated_at }}</p>

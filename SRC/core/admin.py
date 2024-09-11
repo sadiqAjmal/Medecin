@@ -43,6 +43,6 @@ MedicalRecordAdmin class is used to display the medical record model in the admi
 '''
 @admin.register(MedicalRecord)
 class MedicalRecordAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'doctor', 'appointment', 'created_at', 'updated_at')
-    search_fields = ('patient__name', 'diagnosis', 'treatment')
-    list_filter = ['patient']
+    list_display = ('appointment__patient', 'appointment__doctor', 'appointment', 'created_at', 'updated_at')
+    search_fields = ('appointment__patient__name', 'diagnosis', 'treatment')
+    list_filter = ['appointment__patient']

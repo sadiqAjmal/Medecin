@@ -60,8 +60,6 @@ MedicalRecord model is used to store the medical record of the patient
 - report: report of the patient
 '''
 class MedicalRecord(models.Model):
-    patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
-    doctor = models.ForeignKey('Doctor', on_delete=models.SET_NULL, null=True)
     appointment = models.ForeignKey('Appointment', on_delete=models.SET_NULL, null=True)
     diagnosis = models.TextField()
     treatment = models.TextField()

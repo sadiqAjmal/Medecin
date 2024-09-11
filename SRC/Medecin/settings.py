@@ -108,6 +108,83 @@ CACHES = {
 
 LANGUAGE_CODE = 'en-us'
 
+import os
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        # Handler for error logs
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'errors.log'),
+            'formatter': 'verbose',
+        },
+        # Handler for warning logs
+        'warning_file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'warnings.log'),
+            'formatter': 'verbose',
+        },
+        # Handler for info logs
+        'info_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'info.log'),
+            'formatter': 'verbose',
+        },
+        # Handler for debugging logs
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'debug.log'),
+            'formatter': 'verbose',
+        },
+        # Handler for critical errors
+        'critical_file': {
+            'level': 'CRITICAL',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'critical.log'),
+            'formatter': 'verbose',
+        },
+        # Console handler for general log output
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        # Default logger for Django
+        'django': {
+            'handlers': ['error_file', 'warning_file', 'info_file', 'debug_file', 'critical_file', 'console'],
+            'level': 'DEBUG',  # Capture all log levels
+            'propagate': True,
+        },
+        # Custom logger for your application
+        'core': {
+            'handlers': ['error_file', 'warning_file', 'info_file', 'debug_file', 'critical_file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True

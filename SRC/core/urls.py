@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import dashboard,patient,doctor,medical_record,appointments
+from .views import dashboard,patient,doctor,medical_record,appointments,report
 from django.views.decorators.cache import cache_page
 '''
 url patterns for the core app, these urls are used to navigate through the application
@@ -22,7 +22,6 @@ urlpatterns = [
     path('appointments/create/', appointments.AppointmentCreateView.as_view(), name='create_appointment'),
     path('appointments/update/<int:pk>/', appointments.AppointmentUpdateView.as_view(), name='update_appointment'),
     path('appointments/delete/<int:pk>/', appointments.AppointmentDeleteView.as_view(), name='delete_appointment'),
-    path('appointments/filter',appointments.AppointmentFilterView.as_view(),name='filter_appointment'),
     # Doctor URLs
     path('dashboard/doctors/', doctor.DoctorDashboardView.as_view(), name='doctor_dashboard'),
     path('doctors/', doctor.DoctorListView.as_view(), name='doctor_list'),
@@ -37,5 +36,9 @@ urlpatterns = [
     path('medical-records/create/', medical_record.MedicalRecordCreateView.as_view(), name='create_medical_record'),
     path('medical-records/update/<int:pk>/', medical_record.MedicalRecordUpdateView.as_view(), name='update_medical_record'),
     path('medical-records/delete/<int:pk>/', medical_record.MedicalRecordDeleteView.as_view(), name='delete_medical_record'),
+
+    # Report URLs
+    path('appointments/report',report.ReportCountView.as_view(),name='appointment_report'),
+    path('reports/<str:date>/', report.ReportDetailView.as_view(), name='report_detail'),
 
 ]
