@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.views import View
 from core.models import Appointment
 from core.forms import AppointmentFilterForm
+from .utils import AdminRequiredMixin
 
-class ReportCountView(View):
+class ReportCountView(AdminRequiredMixin, View):
     """
     View for generating appointment reports based on filters.
     """
@@ -66,7 +67,7 @@ class ReportCountView(View):
         return render(request, self.template_name, {'form': form})
 
 
-class ReportDetailView(View):
+class ReportDetailView(AdminRequiredMixin, View):
     """
     View for displaying detailed report for a specific date.
     """
