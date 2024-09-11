@@ -29,7 +29,7 @@ class DoctorDashboardView(LoginRequiredMixin, TemplateView):
         logger.info(f"Doctor dashboard accessed by user {self.request.user.id}")
         context = super().get_context_data(**kwargs)
         try:
-            context['patients'] = Patient.objects.filter(appointment__doctor=self.request.user.doctor)
+            context['patients'] = Appointment.objects.filter(doctor=self.request.user.doctor).values('patient').distinct()
             context['appointments'] = Appointment.objects.filter(doctor=self.request.user.doctor).order_by('-scheduled_at')
             context['doctor'] = Doctor.objects.get(user=self.request.user)
             logger.debug(f"Dashboard context data: {len(context['patients'])} patients, {len(context['appointments'])} appointments")
