@@ -43,6 +43,30 @@ Médecin is a simplified Hospital Management System built using Django. This sys
 git clone https://github.com/okusjid/medecin.git
 cd medecin
 ```
+2. **Navigate to the project directory**:
+```bash
+cd Medicin/SRC
+```
+3. **Run Migrations for users app**:
+```bash
+python manage.py migrate users
+```
+4. **Run Migrations for core**:
+```bash
+python manage.py migrate core
+```
+5. **Run All Migrations**:
+```bash
+python manage.py migrate
+```
+6. **Create a superuser**:
+```bash
+python manage.py createsuperuser
+```
+7. **Run the project**
+```bash
+python manage.py runserver
+```
 
 ### Create a Virtual Environment (Optional but Recommended):
 ```bash
