@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from debug_toolbar.toolbar import debug_toolbar_urls
 '''
 url patterns for the Medecin app, these urls are used to navigate through the application,
 - admin: admin urls
@@ -35,7 +35,7 @@ urlpatterns = [
     path('', auth_views.LoginView.as_view(), name='login'),
     path('core/', include('core.urls')),
     path('redirect/', include('users.urls')),
-]
+]+debug_toolbar_urls()
 
 
 if settings.DEBUG:
