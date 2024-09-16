@@ -29,8 +29,13 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTH_USER_MODEL = 'users.User'
 
 INSTALLED_APPS = [
+    'rest_framework',
+    'api.users',
+    'api.appointments',
+    'api.medical_records',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
